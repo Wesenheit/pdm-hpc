@@ -1,0 +1,13 @@
+[project]
+name = "pdm-hpc"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["pdm>=2.0"]
+
+[project.entry-points."pdm"]
+pdm_hpc = "pdm_hpc:plugin"   # must match function name below
+
+[tool.pdm]
+plugins = [
+    "-e file:///${PROJECT_ROOT}/#egg=pdm_hpc",
+]
