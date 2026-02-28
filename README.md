@@ -67,7 +67,7 @@ Synchronizing working set with resolved packages: 5 to add, 0 to update, 0 to re
   ✔ Install urllib3 2.6.3 successful
   ✔ Install requests 2.32.5 successful
   ✔ Install charset-normalizer 3.4.4 successful
-  ✔ Install SpackTest 0.1.0 successful
+  ✔ Install Test 0.1.0 successful
 
   0:00:00 🎉 All complete! 5/5
 
@@ -84,4 +84,8 @@ This allows us to finally proceed with the instalation. Keep in mind that this c
       system:     2.9.0
       OK: pinning torch==2.9.0
 ```
-we will get `torch` version saved so we can use it to reproduce results out of cluster.
+we will get `torch` version saved in `pdm.lock` so we can use it to reproduce results out of cluster.
+Obviously this does not provide any quaranties that it will be compatible (for example, our program might depend on mpi
+support in pytorch that is only configured on the hpc cluster).
+
+
