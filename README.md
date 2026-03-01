@@ -1,4 +1,6 @@
 # pdm-hpc
+> [!CAUTION]
+> Plugin is currently in the experimental phase, things may break!
 
 Virtual enviroments are the usuall way to version and control packages used 
 in the real-world dev work. However, this is not the usuall way to work on HPC clusters. In such cases
@@ -8,11 +10,12 @@ against the specific MPI version that is cluster-optimized). Current tools do no
 way to reliably verify content provied in pyproject.toml against installed versions. This 
 plugin is designed to bring down this barrier and bring modern tools to HPC.
 
-[!WARNING]
-To use the plugin remember to setup pdm project so it can inherit system packages!
+> [!NOTE]
+> To use the plugin remember to setup `pdm` project so it can inherit
+ system packages (either through `__pypackages__` or with venv)!
 
 ## Usage
-To install the plugin we can specify a very simple example:
+To install the plugin we can specify a very simple example `pyproject.toml`:
 
 ```
 [project]
@@ -42,7 +45,12 @@ If there is no system library for `numpy` we will get error when using `pdm inst
 External dependency validation failed:
   - numpy: not found in system Python
 ```
-Now we can load a module enviromental file that provides us with `numpy 1.26.4`. Now when we run 
+> [!NOTE]
+> Plugin uses the interpreter specified in the initial
+> config to look for the dependencies.
+
+
+Now we can load a module  that provides us with `numpy 1.26.4`. Now when we run 
 we will get 
 ```
 >>> numpy:
@@ -52,7 +60,7 @@ we will get
 External dependency validation failed:
   - numpy: system has 1.26.4 but >2.0 is required
 ```
-Our numpy version is no good, let's decrease the version requirements to >1.0. We finally have
+Our numpy version is to old, let's decrease the version requirements to >1.0. We finally have
 
 ```
 >>> numpy:
@@ -72,8 +80,13 @@ Synchronizing working set with resolved packages: 5 to add, 0 to update, 0 to re
   0:00:00 🎉 All complete! 5/5
 
 ```
-This allows us to finally proceed with the instalation. Keep in mind that this creates `pdm.lock` file with 
-`numpy` version specified by the system-resolved version. This is really important when moving off-cluster.
+
+This allows us to finally proceed with the instalation.
+Keep in mind that this creates `pdm.lock` file with 
+`numpy` version specified by the system-resolved version.
+This is really important when moving off-cluster. As we can see, while installing
+libraries we are skiping over `numpy` as we want (no dependencies are installed).
+
 ```
 >>> numpy:
       requested:  >1.0
@@ -85,7 +98,10 @@ This allows us to finally proceed with the instalation. Keep in mind that this c
       OK: pinning torch==2.9.0
 ```
 we will get `torch` version saved in `pdm.lock` so we can use it to reproduce results out of cluster.
-Obviously this does not provide any quaranties that it will be compatible (for example, our program might depend on mpi
+Obviously this does not provide any guaranties that it will be compatible (for example, our program might depend on mpi
 support in pytorch that is only configured on the hpc cluster).
 
+> [!NOTE]
+> Current support covers only lock creation, no runtime guaranties are supported
+  in the current version.
 
