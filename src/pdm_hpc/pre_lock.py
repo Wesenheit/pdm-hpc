@@ -4,6 +4,7 @@ from .utils import (
     get_external_deps,
     get_package_version,
     get_index_url,
+    strip_version,
 )
 from packaging.requirements import Requirement
 from typing import Optional
@@ -84,7 +85,7 @@ def pin_found_or_error(project, **kwargs) -> None:
         if requested_spec is None:
             continue
 
-        system_version = get_package_version(project, package)
+        system_version = strip_version(get_package_version(project, package))
 
         print(f">>> {package}:")
         print(f"      requested:  {requested_spec or 'any'}")

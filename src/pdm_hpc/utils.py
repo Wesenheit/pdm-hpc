@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 
 def get_external_deps(project) -> list[str]:
@@ -97,3 +98,16 @@ def fetch_package_metadata(
             f">>> WARNING: could not fetch metadata for {package_name}=={version}: {e}"
         )
         return []
+
+
+def strip_version(version: str | None) -> str | None:
+    if version is None:
+        return None
+    match = re.match(r"^(\d+\.\d+\.\d+)", version)
+
+    if match:
+        clean_version = match.group(1)
+    else:
+        clean_version = version
+
+    return clean_version
